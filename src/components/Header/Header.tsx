@@ -8,10 +8,10 @@ const Header: React.FC = () => {
         target="_blank"
         rel="noopener noreferrer"
         href="https://particlesnft.io/"
-        className="flex justify-between items-center gap-5 text-3xl"
+        className="flex justify-between items-center gap-5"
       >
-        <Image width={36} height={41} src="/images/plogo.png" alt="logo" />
-        Particles
+        <Image width={48} height={41} src="/images/plogo.png" alt="logo" />
+        <span className="font-bold text-2xl">Particles</span>
       </a>
       <ul className="flex justify-between items-center gap-7">
         <li>
@@ -21,7 +21,7 @@ const Header: React.FC = () => {
             href="https://groovyenzio.medium.com/particles-nft-8cdbc50e884"
           >
             <Image
-              width={22}
+              width={30}
               height={22}
               src="/images/download.png"
               alt="medium"
@@ -35,8 +35,8 @@ const Header: React.FC = () => {
             href="https://dsc.gg/particles"
           >
             <Image
-              width={24}
-              height={24}
+              width={30}
+              height={30}
               src="/images/discord.svg"
               alt="discord"
             />
@@ -49,8 +49,8 @@ const Header: React.FC = () => {
             href="https://twitter.com/particlesnft"
           >
             <Image
-              width={28}
-              height={28}
+              width={30}
+              height={30}
               src="/images/twitter.svg"
               alt="twitter"
             />
