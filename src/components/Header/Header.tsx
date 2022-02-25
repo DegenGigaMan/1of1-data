@@ -3,7 +3,7 @@ import Image from "next/image";
 
 const Header: React.FC = () => {
   return (
-    <div className="w-full h-full p-10 flex justify-between items-center">
+    <div className="w-full h-full p-8 flex justify-between items-center">
       <a
         target="_blank"
         rel="noopener noreferrer"

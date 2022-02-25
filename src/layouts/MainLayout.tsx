@@ -5,7 +5,7 @@ import Header from "../components/Header/Header";
 const MainLayout: React.FC = ({ children }) => {
   return (
     <div className="w-full h-full px-5 flex flex-col justify-items-stretch">
-      <div className="flex flex-col">
+      <div className="flex flex-col flex-1">
         <Header />
         <div className="w-full flex flex-col p-2">
           <h1 className="text-left font-semibold text-4xl">

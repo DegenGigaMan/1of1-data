@@ -118,7 +118,7 @@ const LeaderboardTable = () => {
     tableInstance;
 
   return (
-    <div className="w-full h-[590px] overflow-y-scroll overflow-x-hidden rounded-sm no-scrollbar">
+    <div className="w-full h-[590px] overflow-y-scroll overflow-x-hidden rounded-sm no-scrollbar border-b-2 border-b-gray-100">
       {tableData.length === 0 ? (
         <h1>Loading...</h1>
       ) : (
