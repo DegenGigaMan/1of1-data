@@ -13,12 +13,13 @@ const Header: React.FC = () => {
         <Image width={48} height={41} src="/images/plogo.png" alt="logo" />
         <span className="font-bold text-2xl">Particles</span>
       </a>
-      <ul className="flex justify-between items-center gap-7">
-        <li>
+      <ul className="center-item gap-7">
+        <li className="center-item">
           <a
             target="_blank"
             rel="noopener noreferrer"
             href="https://groovyenzio.medium.com/particles-nft-8cdbc50e884"
+            className="center-item"
           >
             <Image
               width={30}
@@ -28,11 +29,12 @@ const Header: React.FC = () => {
             />
           </a>
         </li>
-        <li>
+        <li className="center-item">
           <a
             target="_blank"
             rel="noopener noreferrer"
             href="https://dsc.gg/particles"
+            className="center-item"
           >
             <Image
               width={30}
@@ -42,11 +44,12 @@ const Header: React.FC = () => {
             />
           </a>
         </li>
-        <li>
+        <li className="center-item">
           <a
             target="_blank"
             rel="noopener noreferrer"
             href="https://twitter.com/particlesnft"
+            className="center-item"
           >
             <Image
               width={30}

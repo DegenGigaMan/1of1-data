@@ -11,7 +11,7 @@ const MainLayout: React.FC = ({ children }) => {
           <h1 className="text-left font-semibold text-4xl">
             Holaplex Creator Leaderboard
           </h1>
-          <span className="text-right">*Updated every 24hrs</span>
+          <span className="text-right italic">*Updated every 24hrs</span>
         </div>
       </div>
       <main className="w-full">{children}</main>

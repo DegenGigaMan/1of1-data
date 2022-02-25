@@ -40,7 +40,6 @@ const LeaderboardTable = () => {
     () => [
       {
         Header: "#",
-        maxWidth: 45,
         Cell: ({ row }: CellProps<RowData>) => {
           return (
             <div className="text-lg flex justify-center items-center">
@@ -50,13 +49,12 @@ const LeaderboardTable = () => {
         },
       },
       {
-        Header: "",
-        accessor: "logoUrl",
-        maxWidth: 90,
+        Header: "Collection",
+        accessor: "title",
         disableSortBy: true,
         Cell: ({ row }: CellProps<RowData>) => {
           return (
-            <div className="flex justify-center items-center">
+            <div className="w-full flex justify-start items-center gap-5">
               <Image
                 className="rounded-xl z-10"
                 height={55}
@@ -64,29 +62,8 @@ const LeaderboardTable = () => {
                 src={row.original.logoUrl || ""}
                 alt="pfp"
               />
+              <span>{row.original.title}</span>
             </div>
-          );
-        },
-      },
-      {
-        Header: "Collection",
-        accessor: "title",
-        minWidth: 200,
-        disableSortBy: true,
-        Cell: ({ row }: CellProps<RowData>) => {
-          return (
-            <a
-              style={{
-                color: "black",
-                textDecoration: "none",
-                fontSize: "1.25rem",
-              }}
-              target={"_blank"}
-              rel="noopener noreferrer"
-              href={row.original.subDomain}
-            >
-              {row.original.title}
-            </a>
           );
         },
       },
@@ -141,90 +118,102 @@ const LeaderboardTable = () => {
     tableInstance;
 
   return (
-    <div className="w-full h-[590px] overflow-y-scroll overflow-x-hidden border-2 border-gray-50">
-      <table {...getTableProps()} className="w-full">
-        <thead className="sticky top-0 bg-white opacity-100 z-50 border-b-2 border-b-gray-100 drop-shadow-lg">
-          {
-            // Loop over the header rows
-            headerGroups.map((headerGroup, index) => (
-              // Apply the header row props
-              <tr
-                className="h-20"
-                {...headerGroup.getHeaderGroupProps()}
-                key={`${headerGroup.id}-${index}`}
-              >
-                {
-                  // Loop over the headers in each row
-                  headerGroup.headers.map((column, columnIndex) => (
-                    // Apply the header cell props
-                    <th
-                      {...column.getHeaderProps(column.getSortByToggleProps())}
-                      key={`${column.id}-${index}`}
-                    >
-                      {
-                        // Render the header
-                        column.render("Header")
-                      }
-                    </th>
-                  ))
-                }
-              </tr>
-            ))
-          }
-        </thead>
-        {/* Apply the table body props */}
-        <tbody
-          {...getTableBodyProps()}
-          className="bg-white divide-y-4 divide-gray-100"
+    <div className="w-full h-[590px] overflow-y-scroll overflow-x-hidden rounded-sm no-scrollbar">
+      {tableData.length === 0 ? (
+        <h1>Loading...</h1>
+      ) : (
+        <motion.table
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+          {...getTableProps()}
+          className="w-full font-bold rounded-sm"
         >
-          {
-            // Loop over the table rows
-            rows.map((row, index) => {
-              // Prepare the row for display
-              prepareRow(row);
-              return (
-                // Apply the row props
-                <motion.tr
-                  whileHover={{
-                    className: "shadow-md",
-                    position: "relative",
-                    zIndex: 0.5,
-                    scale: 1.03,
-                    transition: {
-                      duration: 0.2,
-                    },
-                  }}
-                  {...row.getRowProps()}
-                  key={`${row.id}-${index}`}
-                  onClick={() => openLink(row.original.subDomain)}
-                  className="cursor-pointer"
+          <thead className="sticky top-0 opacity-100 z-50 drop-shadow-lg bg-neutral-50">
+            {
+              // Loop over the header rows
+              headerGroups.map((headerGroup, index) => (
+                // Apply the header row props
+                <tr
+                  className="h-20"
+                  {...headerGroup.getHeaderGroupProps()}
+                  key={`${headerGroup.id}-${index}`}
                 >
                   {
-                    // Loop over the rows cells
-                    row.cells.map((cell, index) => {
-                      // Apply the cell props
-                      return (
-                        <td
-                          {...cell.getCellProps()}
-                          key={`${cell.value}-${index}`}
-                          className="px-6 py-4 whitespace-nowrap"
-                        >
-                          {
-                            // Render the cell contents
-                            <div className="flex justify-center items-center">
-                              {cell.render("Cell")}
-                            </div>
-                          }
-                        </td>
-                      );
-                    })
+                    // Loop over the headers in each row
+                    headerGroup.headers.map((column, columnIndex) => (
+                      // Apply the header cell props
+                      <th
+                        {...column.getHeaderProps(
+                          column.getSortByToggleProps()
+                        )}
+                        key={`${column.id}-${index}`}
+                      >
+                        {
+                          // Render the header
+                          column.render("Header")
+                        }
+                      </th>
+                    ))
                   }
-                </motion.tr>
-              );
-            })
-          }
-        </tbody>
-      </table>
+                </tr>
+              ))
+            }
+          </thead>
+          {/* Apply the table body props */}
+          <tbody
+            {...getTableBodyProps()}
+            className="bg-white divide-y-4 divide-gray-100"
+          >
+            {
+              // Loop over the table rows
+              rows.map((row, index) => {
+                // Prepare the row for display
+                prepareRow(row);
+                return (
+                  // Apply the row props
+                  <motion.tr
+                    whileHover={{
+                      className: "shadow-md",
+                      position: "relative",
+                      zIndex: 0.5,
+                      scale: 1.03,
+                      transition: {
+                        duration: 0.2,
+                      },
+                    }}
+                    {...row.getRowProps()}
+                    key={`${row.id}-${index}`}
+                    onClick={() => openLink(row.original.subDomain)}
+                    className="cursor-pointer"
+                  >
+                    {
+                      // Loop over the rows cells
+                      row.cells.map((cell, index) => {
+                        // Apply the cell props
+                        return (
+                          <td
+                            {...cell.getCellProps()}
+                            key={`${cell.value}-${index}`}
+                            className="px-6 py-4 whitespace-nowrap"
+                          >
+                            {
+                              // Render the cell contents
+                              <div className="flex justify-center items-center">
+                                {cell.render("Cell")}
+                              </div>
+                            }
+                          </td>
+                        );
+                      })
+                    }
+                  </motion.tr>
+                );
+              })
+            }
+          </tbody>
+        </motion.table>
+      )}
     </div>
   );
 };
