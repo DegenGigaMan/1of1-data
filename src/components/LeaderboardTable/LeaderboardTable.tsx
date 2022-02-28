@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { CellProps, Column, useSortBy, useTable } from "react-table";
+import { CellProps, Column, useTable } from "react-table";
 import axios from "axios";
 import { motion } from "framer-motion";
 
@@ -107,7 +107,6 @@ const LeaderboardTable = () => {
 
   const tableInstance = useTable<RowData>(
     { columns, data: memoizedData },
-    useSortBy
   );
 
   const openLink = (url: string): void => {
@@ -145,7 +144,6 @@ const LeaderboardTable = () => {
                       // Apply the header cell props
                       <th
                         {...column.getHeaderProps(
-                          column.getSortByToggleProps()
                         )}
                         key={`${column.id}-${index}`}
                       >
