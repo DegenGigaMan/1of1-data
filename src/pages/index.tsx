@@ -1,9 +1,3 @@
-import type { NextPage } from "next";
-import Head from "next/head";
-import Image from "next/image";
+import LeaderboardPage from "./leaderboard";
 
-const Home: NextPage = () => {
-  return <div>home</div>;
-};
-
-export default Home;
+export default LeaderboardPage;
