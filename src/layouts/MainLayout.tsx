@@ -7,7 +7,7 @@ const MainLayout: React.FC = ({ children }) => {
     <div className="w-full h-full px-5 flex flex-col justify-items-stretch">
       <Header />
       <main className="w-full">{children}</main>
-      <Footer />
+      
     </div>
   );
 };

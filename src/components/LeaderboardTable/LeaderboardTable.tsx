@@ -1,8 +1,19 @@
+// @ts-nocheck
+// TODO: Remove above comment to turn typescript back on
+// once react-table v8 is stable for production use
+
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { CellProps, Column, useTable } from "react-table";
+import {
+  CellProps,
+  Column,
+  useSortBy,
+  useTable,
+  useGlobalFilter,
+} from "react-table";
 import axios from "axios";
 import { motion } from "framer-motion";
+import Search from "./Search/Search";
 
 interface RowData {
   subDomain: string;
@@ -16,7 +27,7 @@ interface RowData {
 const getLeaderboard = async () => {
   try {
     const response = await axios.get(
-      "https://api-server-i1ckqglzc-degengigaman.vercel.app/api/holaplex/leaderboard?skipCount=0&maxResultCount=204"
+      "https://api-server-i1ckqglzc-degengigaman.vercel.app/api/holaplex/leaderboard?skipCount=0&maxResultCount=304"
     );
     return response.data.data;
   } catch (error) {
@@ -49,7 +60,7 @@ const LeaderboardTable = () => {
         },
       },
       {
-        Header: "Collection",
+        Header: "",
         accessor: "title",
         disableSortBy: true,
         Cell: ({ row }: CellProps<RowData>) => {
@@ -105,113 +116,132 @@ const LeaderboardTable = () => {
 
   const memoizedData = React.useMemo(() => tableData, [tableData]);
 
-  const tableInstance = useTable<RowData>(
+  const tableInstance = useTable(
     { columns, data: memoizedData },
+    useGlobalFilter,
+    useSortBy
   );
 
   const openLink = (url: string): void => {
     window.open(url, "_blank");
   };
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    tableInstance;
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+    preGlobalFilteredRows,
+    setGlobalFilter,
+    state,
+  } = tableInstance;
 
   return (
-    <div className="w-full h-[590px] overflow-y-scroll overflow-x-hidden rounded-sm no-scrollbar border-b-2 border-b-gray-100">
-      {tableData.length === 0 ? (
-        <h1>Loading...</h1>
-      ) : (
-        <motion.table
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          {...getTableProps()}
-          className="w-full font-bold rounded-sm"
-        >
-          <thead className="sticky top-0 opacity-100 z-50 drop-shadow-lg bg-neutral-50">
-            {
-              // Loop over the header rows
-              headerGroups.map((headerGroup, index) => (
-                // Apply the header row props
-                <tr
-                  className="h-20"
-                  {...headerGroup.getHeaderGroupProps()}
-                  key={`${headerGroup.id}-${index}`}
-                >
-                  {
-                    // Loop over the headers in each row
-                    headerGroup.headers.map((column, columnIndex) => (
-                      // Apply the header cell props
-                      <th
-                        {...column.getHeaderProps(
-                        )}
-                        key={`${column.id}-${index}`}
-                      >
-                        {
-                          // Render the header
-                          column.render("Header")
-                        }
-                      </th>
-                    ))
-                  }
-                </tr>
-              ))
-            }
-          </thead>
-          {/* Apply the table body props */}
-          <tbody
-            {...getTableBodyProps()}
-            className="bg-white divide-y-4 divide-gray-100"
+    <div className="flex flex-col justify-stretch items-end">
+      <Search
+        preGlobalFilteredRows={preGlobalFilteredRows}
+        setGlobalFilter={setGlobalFilter}
+        globalFilter={state.globalFilter}
+      />
+      <div className="w-full h-full lg:h-[700px] overflow-x-hidden rounded-sm no-scrollbar border-b-2 border-b-gray-100">
+        {tableData.length === 0 ? (
+          <h1>Loading...</h1>
+        ) : (
+          <motion.table
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            {...getTableProps()}
+            className="w-full font-bold rounded-sm"
           >
-            {
-              // Loop over the table rows
-              rows.map((row, index) => {
-                // Prepare the row for display
-                prepareRow(row);
-                return (
-                  // Apply the row props
-                  <motion.tr
-                    whileHover={{
-                      className: "shadow-md",
-                      position: "relative",
-                      zIndex: 0.5,
-                      scale: 1.03,
-                      transition: {
-                        duration: 0.2,
-                      },
-                    }}
-                    {...row.getRowProps()}
-                    key={`${row.id}-${index}`}
-                    onClick={() => openLink(row.original.subDomain)}
-                    className="cursor-pointer"
+            <thead className="sticky top-0 opacity-100 z-50 drop-shadow-lg bg-neutral-50">
+              {
+                // Loop over the header rows
+                headerGroups.map((headerGroup, index) => (
+                  // Apply the header row props
+                  <tr
+                    className="h-20"
+                    {...headerGroup.getHeaderGroupProps()}
+                    key={`${headerGroup.id}-${index}`}
                   >
                     {
-                      // Loop over the rows cells
-                      row.cells.map((cell, index) => {
-                        // Apply the cell props
-                        return (
-                          <td
-                            {...cell.getCellProps()}
-                            key={`${cell.value}-${index}`}
-                            className="px-6 py-4 whitespace-nowrap"
-                          >
-                            {
-                              // Render the cell contents
-                              <div className="flex justify-center items-center">
-                                {cell.render("Cell")}
-                              </div>
-                            }
-                          </td>
-                        );
-                      })
+                      // Loop over the headers in each row
+                      headerGroup.headers.map((column, columnIndex) => (
+                        // Apply the header cell props
+                        <th
+                          {...column.getHeaderProps(
+                            column.getSortByToggleProps()
+                          )}
+                          key={`${column.id}-${index}`}
+                          className="text-center"
+                        >
+                          {
+                            // Render the header
+                            column.render("Header")
+                          }
+                        </th>
+                      ))
                     }
-                  </motion.tr>
-                );
-              })
-            }
-          </tbody>
-        </motion.table>
-      )}
+                  </tr>
+                ))
+              }
+            </thead>
+            {/* Apply the table body props */}
+            <tbody
+              {...getTableBodyProps()}
+              className="bg-white divide-y-4 divide-gray-100 overflow-y-scroll"
+            >
+              {
+                // Loop over the table rows
+                rows.map((row, index) => {
+                  // Prepare the row for display
+                  prepareRow(row);
+                  return (
+                    // Apply the row props
+                    <motion.tr
+                      whileHover={{
+                        className: "shadow-md",
+                        position: "relative",
+                        zIndex: 0.5,
+                        scale: 1.03,
+                        transition: {
+                          duration: 0.2,
+                        },
+                      }}
+                      {...row.getRowProps()}
+                      key={`${row.id}-${index}`}
+                      onClick={() => openLink(row.original.subDomain)}
+                      className="cursor-pointer"
+                    >
+                      {
+                        // Loop over the rows cells
+                        row.cells.map((cell, index) => {
+                          // Apply the cell props
+                          return (
+                            <td
+                              {...cell.getCellProps()}
+                              key={`${cell.value}-${index}`}
+                              className="px-6 py-4 whitespace-nowrap"
+                            >
+                              {
+                                // Render the cell contents
+                                <div className="flex justify-center items-center">
+                                  {cell.render("Cell")}
+                                </div>
+                              }
+                            </td>
+                          );
+                        })
+                      }
+                    </motion.tr>
+                  );
+                })
+              }
+            </tbody>
+          </motion.table>
+        )}
+      </div>
     </div>
   );
 };
