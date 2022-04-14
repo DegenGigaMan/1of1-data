@@ -27,7 +27,7 @@ interface RowData {
 const getLeaderboard = async () => {
   try {
     const response = await axios.get(
-      "https://api-server-i1ckqglzc-degengigaman.vercel.app/api/holaplex/leaderboard?skipCount=0&maxResultCount=304"
+      "https://api-server-nfhqvxhl9-degengigaman.vercel.app/api/holaplex/leaderboard?skipCount=0&maxResultCount=304"
     );
     return response.data.data;
   } catch (error) {
